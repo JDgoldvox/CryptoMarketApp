@@ -1,3 +1,5 @@
+using CryptoMarket.Account;
+
 namespace CryptoMarket.Endpoints;
 
 public static class AccountEndpoints
@@ -10,16 +12,31 @@ public static class AccountEndpoints
     {
         //RouteGroupBuilder accountRoute = app.MapGroup(groupName);
 
-        app.MapGet("/{userId}/balance", GetUserAccountBalance);
-
+        app.MapGet("/{userId}/balance", GetUserAccountBalance)
+            .WithTags("Account")
+            .WithName("Get user account balance")
+            .WithSummary("Get the current balance of a user")
+            .Produces<AccountBalanceResponse>()
+            ;
+        
+        app.MapGet("/{userId}/balance2", GetUserAccountBalance)
+            .WithTags("Account")
+            .WithName("Get user account balance2")
+            .WithSummary("Get the current balance of a user2")
+            .Produces<AccountBalanceResponse>()
+            ;
     }
-
+    
+    /// <summary> Get a user account balance from an id </summary>
+    /// <param name="userId"> The unique identifier of a user </param>
+    /// <returns> The current user balance </returns>
+    /// <returns> <see cref="AccountBalanceResponse"/> </returns>
     private static IResult GetUserAccountBalance(int userId)
     {
-        return Results.Ok(new
-        {
-            Balance = tempBalance,
-            Id = userId,
-        });
+        var response = new AccountBalanceResponse(
+            Balance: tempBalance
+            );
+        
+        return Results.Ok(response);
     }
 }
