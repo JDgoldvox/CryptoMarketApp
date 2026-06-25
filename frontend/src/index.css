@@ -1,14 +1,29 @@
 :root {
-  
+    --primary-bg-color: #f5f1f8;
+    --accent-bg-color: #9736d9;
+    --primary-font-color: #1c021f;
+    --secondary-font-color: #e9e1ee;
+}
+
+@font-face
+{
+    font-family: bodyFont;
+    src: url("../public/fonts/Roboto_mono/RobotoMono-VariableFont_wght.ttf")
+}
+
+@font-face
+{
+    font-family: titleFont;
+    src: url("../public/fonts/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf")
 }
 
 body {
- 
+    background-color: var(--primary-bg-color);
 }
 
 h1,
 h2 {
-  
+    font-family: titleFont, sans-serif;
 }
 
 h1 {
@@ -18,5 +33,6 @@ h2 {
   
 }
 p {
-  
+    color: var(--primary-font-color);
+    font-family: bodyFont, sans-serif;
 }
