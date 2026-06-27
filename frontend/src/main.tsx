@@ -5,26 +5,34 @@ import { RouterProvider } from "react-router/dom";
 
 import './index.css'
 import App from './App.tsx'
-import Home from './pages/Home.tsx'
-import Dashboard from './pages/Dashboard.tsx'
+import Login from './pages/Login.tsx'
+import Portfolio from './pages/Portfolio.tsx'
+import Market from './pages/Market.tsx'
+import Landing from './pages/Landing.tsx'
 
 const router : any = createBrowserRouter([
     {
         path: "/",
         Component: App,
         children: [
-                {
-                    index: true,
-                    Component: Home,
-                },
-                {
-                    path: "dashboard",
-                    Component: Dashboard,
-                },
-                // {
-                //    
-                // },
-            ]
+            {
+                index: true,
+                Component: Landing,
+            },
+            {
+                path: "login",
+                Component: Login,
+            },
+            {
+                path: "portfolio",
+                Component: Portfolio,
+            },
+            {
+                path: "market",
+                Component: Market,
+            }
+                       
+        ]
     },
 ]);
 

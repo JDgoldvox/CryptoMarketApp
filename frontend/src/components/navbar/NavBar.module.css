@@ -1,0 +1,51 @@
+﻿
+.navBar
+{
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    justify-items: start;
+    
+    li
+    {
+        align-Content: center;
+        font-size: 1.5rem;
+    }
+    
+    a
+    {
+        text-decoration: none;
+        color: var(--primary-font-color);
+        font-family: var(--body-font-family);
+    }
+}
+
+.navBarContainer
+{
+    display: flex;
+    align-content: center;
+    width: 100%;
+    height: 5rem;
+    background-color: var(--accent-bg-color);
+}
+
+.logoContainer
+{
+    Display: flex;
+    justify-items: center;
+    align-items: center;
+    margin-left: 1rem;
+    text-decoration: none;
+}
+
+.logo
+{
+    justify-items: center;
+    align-items: center;
+}
+
+.logoText
+{
+    font-size: 2rem;
+    font-family: var(--title-font-family);
+}

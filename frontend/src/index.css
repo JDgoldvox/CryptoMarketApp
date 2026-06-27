@@ -3,34 +3,42 @@
     --accent-bg-color: #9736d9;
     --primary-font-color: #1c021f;
     --secondary-font-color: #e9e1ee;
+    
+    --title-font-family: titleFont, sans-serif;
+    --body-font-family: bodyFont, sans-serif;
 }
 
+/*noinspection ALL*/
 @font-face
 {
     font-family: bodyFont;
-    src: url("../public/fonts/Roboto_mono/RobotoMono-VariableFont_wght.ttf")
+    src: url("./fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf") format('truetype');
 }
 
+/*noinspection ALL*/
 @font-face
 {
     font-family: titleFont;
-    src: url("../public/fonts/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf")
+    src: url("./fonts/Space_Grotesk/SpaceGrotesk-VariableFont_wght.ttf") format('truetype');
 }
 
 body {
     background-color: var(--primary-bg-color);
+    margin: 0;
+    padding: 0;
 }
 
 h1,
 h2 {
+    color: var(--primary-font-color);
     font-family: titleFont, sans-serif;
 }
 
 h1 {
-  
+    font-size: 5rem;
 }
 h2 {
-  
+    font-size: 4rem;
 }
 p {
     color: var(--primary-font-color);
