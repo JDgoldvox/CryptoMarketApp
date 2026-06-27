@@ -9,7 +9,11 @@ export default function NavBar() {
             
             <NavLink className={navbarStyle.logoContainer} to="/">
                 <Hexagon className={navbarStyle.logo} />
-                <p className = {navbarStyle.logoText}> CryptoMarket </p>
+                <div className = {navbarStyle.logoTextContainer}>
+                    <p> Crypto</p>
+                    <p> Market</p>
+                </div>
+                
             </NavLink>
             
             <ul className = {navbarStyle.navBar}>
