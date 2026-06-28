@@ -1,7 +1,9 @@
 :root {
     --primary-bg-color: #f5f1f8;
+    --primary-bg-color-dark: #dedce3;
     --accent-bg-color: #9736d9;
     --primary-font-color: #1c021f;
+    --primary-font-color-lighter: #490a4d;
     --secondary-font-color: #e9e1ee;
     
     --title-font-family: titleFont, sans-serif;

@@ -1,4 +1,4 @@
-﻿import loginStyle from "./Landing.module.css"
+﻿import landingStyle from "./Landing.module.css"
 
 
 export default function Landing() {

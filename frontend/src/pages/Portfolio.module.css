@@ -1,37 +1,38 @@
-﻿
-.lol
+﻿.portfolioPage
 {
-  background-color: blue;
-  height: 400px;
+  padding: 1rem;
+  background-color: var(--primary-bg-color-dark);
 }
 
-.lol2
+.containerStyle
 {
-  background-color: red;
+  background-color: var(--primary-bg-color);
+  min-height: 300px;
+  height: 100%;
+  border-width: 1px;
+  border-radius: 24px;
 }
 
 .gridContainer
 {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template:
-    'a a b . .'
-    'a a b . .'
-    'c c c c c';
-  background-color: black;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-areas:
+    'a a a a b b b b b b b b'
+    'c c c c b b b b b b b b'
+    'd d d d d d d d d d e e'
+    'f f f f f f f f f f f f'
+    'f f f f f f f f f f f f'
+    'f f f f f f f f f f f f'
+    'f f f f f f f f f f f f'
+    'f f f f f f f f f f f f';
+  
+  gap: 1rem;
 }
 
-.gridItemA
-{
-  grid-area: a;
-}
-
-.gridItemB
-{
-  grid-area: b;
-}
-
-.gridItemC
-{
-  grid-area: c;
-}
+.gridItemA { grid-area: a; }
+.gridItemB { grid-area: b; }
+.gridItemC { grid-area: c; }
+.gridItemD { grid-area: d; }
+.gridItemE { grid-area: e; }
+.gridItemF { grid-area: f; }

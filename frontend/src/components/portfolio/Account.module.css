@@ -1,0 +1,43 @@
+﻿.accountWrapper
+{
+    height: 100%;
+}
+
+.title
+{
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.accountList
+{
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.accountList__content
+{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    
+    .accountList__itemName
+    {
+        margin: 0;
+        color: var(--primary-font-color-lighter);
+    }
+
+    .accountList__itemValue
+    {
+        margin: 0;
+        padding-left: 1rem;
+        font-weight: bold;
+    }
+}
