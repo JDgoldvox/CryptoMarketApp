@@ -1,0 +1,26 @@
+﻿
+.table
+{
+    width: 100%;
+    max-height: 300px;
+    overflow: hidden;
+
+    th, td {
+
+        width: 20%;
+        text-align: center;
+        border-bottom: 1px solid var(--secondary-font-color);
+        font-family: var(--body-font-family);
+    }
+
+    tr:nth-child(even){background-color: var(--primary-bg-color-dark);}
+    
+    th{
+        background-color: var(--accent-bg-color);
+        color: var(--secondary-font-color);
+    }
+    
+    caption{
+        font-family: var(--title-font-family);
+    }
+}

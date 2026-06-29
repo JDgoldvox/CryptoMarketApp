@@ -10,9 +10,23 @@
     
     th, td{
         height: 50px;
+        text-align: center;
+        font-family: var(--body-font-family);
+        width: 20%;
+    }
+    
+    th{
         background-color: var(--accent-bg-color);
         color: var(--secondary-font-color);
-        text-align: center;
-        width: 20%;
+    }
+    
+    td{
+        color: var(--primary-font-color);
+    }
+    
+    tr:nth-child(even){background-color: var(--primary-bg-color-dark);}
+    
+    caption{
+        font-family: var(--title-font-family);
     }
 }

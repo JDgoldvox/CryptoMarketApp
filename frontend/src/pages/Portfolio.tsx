@@ -3,6 +3,7 @@ import portfolioStyle from "./Portfolio.module.css"
 import TopMovers from "../components/portfolio/TopMovers.tsx"
 import Account from "../components/portfolio/Account.tsx"
 import Holding from "../components/portfolio/Holding.tsx"
+import TransactionData from "../components/portfolio/TransactionData.tsx";
 
 export default function Portfolio() {
   return (
@@ -18,7 +19,7 @@ export default function Portfolio() {
                 <TopMovers/>
             </div>
             <div className={`${portfolioStyle.gridItemD} ${portfolioStyle.containerStyle}`}>
-                
+                <TransactionData/>
             </div>
             <div className={`${portfolioStyle.gridItemE} ${portfolioStyle.containerStyle}`}>
                 pie chart on coin holdings
