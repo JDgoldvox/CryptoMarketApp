@@ -1,0 +1,8 @@
+﻿
+.box
+{
+    width: 25%;
+    height: 200px;
+    background-color: var(--primary-bg-color-dark);
+    border-radius: 24px;
+}
