@@ -1,4 +1,18 @@
 ﻿### GET request to example server
 GET  http://localhost:5277/6/balance
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwibmJmIjoxNzgzMTcyMDI5LCJleHAiOjE3ODMxNzU2MjksImlhdCI6MTc4MzE3MjAyOX0.DYQHbHab3zRqePQ_iNk7zxSVGBpnM4EcTFJl22klO8U
 
 ###
+POST http://localhost:5277/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "password"
+}
+
+###
+
+GET http://localhost:5277/secret
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmJmIjoxNzgzMTY4MzkyLCJleHAiOjE3ODMxNzE5OTIsImlhdCI6MTc4MzE2ODM5Mn0.t5Cm9kTLAjwJc2XCBUOn5jFfpNpNG0D1Jr7iYCOpc5s

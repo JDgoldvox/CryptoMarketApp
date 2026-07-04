@@ -1,4 +1,5 @@
 using CryptoMarket.Account;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CryptoMarket.Endpoints;
 
@@ -17,14 +18,8 @@ public static class AccountEndpoints
             .WithName("Get user account balance")
             .WithSummary("Get the current balance of a user")
             .Produces<AccountBalanceResponse>()
-            ;
-        
-        app.MapGet("/{userId}/balance2", GetUserAccountBalance)
-            .WithTags("Account")
-            .WithName("Get user account balance2")
-            .WithSummary("Get the current balance of a user2")
-            .Produces<AccountBalanceResponse>()
-            ;
+            .RequireAuthorization("Admins Only");
+        ;
     }
     
     /// <summary> Get a user account balance from an id </summary>
