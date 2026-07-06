@@ -25,19 +25,19 @@ public static class CryptoMarketAuthorization
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = false, // Kept simple for local dev
+                    ValidateIssuer = false, 
                     ValidateAudience = false, 
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(keyBytes)
+                    IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
                 };
             });
         
         //Add policies
         builder.Services.AddAuthorization(options =>
             options.AddPolicy("Admins Only", policy =>
-                policy.RequireClaim(ClaimTypes.Role, "admin"))
-            );
+                policy.RequireClaim(ClaimTypes.Role, "admin")
+            ));
     }
 
 }

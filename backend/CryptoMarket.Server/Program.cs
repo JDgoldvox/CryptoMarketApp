@@ -20,11 +20,11 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference("/docs");
 }
 
-// PROTECTED ENDPOINT
-app.MapGet("/secret", (ClaimsPrincipal user) => 
-    {
-        return Results.Ok($"Hello {user.Identity?.Name}, you successfully accessed the secure API!");
-    })
-    .RequireAuthorization();    
+// // PROTECTED ENDPOINT
+// app.MapGet("/secret", (ClaimsPrincipal user) => 
+//     {
+//         return Results.Ok($"Hello {user.Identity?.Name}, you successfully accessed the secure API!");
+//     })
+//     .RequireAuthorization();    
 
 app.Run();
