@@ -13,7 +13,7 @@ public static class LoginEndpoints
 {
     public static void MapLoginEndpoints(this WebApplication app)
     {
-        app.MapPost("/login", (LoginRequest request, AuthenticationService authService) =>
+        app.MapPost("/login", async (LoginRequest request, AuthenticationService authService) =>
         {
             // Hardcoded dummy check (Replace with database check later)
             if (request.Username != "admin")
@@ -26,7 +26,11 @@ public static class LoginEndpoints
                 return Results.Unauthorized();
             }
             
-            return Results.Ok(new {Token = authService.GenerateNewJwt(request)} );
+            return Results.Ok(new
+            {
+                Token = await authService.GenerateNewJwt(request),
+                RefreshToken = await authService.GenerateAndSaveRefreshTokenAsync(request)
+            });
         });
 
         app.MapPost("/register", (RegisterRequest request, AuthenticationService authService) =>

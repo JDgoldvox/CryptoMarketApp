@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using CryptoMarket.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -34,6 +35,29 @@ public class AuthenticationService
         var passwordHasher = new PasswordHasher<User>();
         user.PasswordHash = passwordHasher.HashPassword(user, request.Password);
         return user;
+    }
+    
+    public async Task<String> GenerateAndSaveRefreshTokenAsync(LoginRequest request)
+    {
+        var refreshToken = GenerateRefreshToken();
+        
+        
+        
+        
+        //todo: save to database
+        //FIND the user.
+        // user.RefreshToken = refreshToken;
+        // user.RefreshTokenExpiration = DateTime.UtcNow.AddDays(31);
+        
+        return refreshToken;
+    }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
     
     private static bool IsPasswordCorrect(User userFromDb, LoginRequest request) //need to get user from DB

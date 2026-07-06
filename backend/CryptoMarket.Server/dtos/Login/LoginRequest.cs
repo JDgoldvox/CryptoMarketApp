@@ -2,5 +2,6 @@
 
 public record LoginRequest(
     string Username, 
-    string Password  
+    string Password,
+    string RefreshToken
 );
