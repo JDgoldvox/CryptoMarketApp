@@ -7,6 +7,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi(options => options.AddScalarTransformers());
 builder.AddCryptoMarketAuthorization();
+builder.Services.AddScoped<AuthenticationService>();
 
 var app = builder.Build();
 app.UseAuthentication();
