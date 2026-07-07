@@ -1,13 +1,23 @@
 using System.Security.Claims;
 using CryptoMarket.Authorization;
+using CryptoMarket.Data;
 using CryptoMarket.Endpoints;
 using CryptoMarket.LoginEndpoints;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi(options => options.AddScalarTransformers());
 builder.AddCryptoMarketAuthorization();
 builder.Services.AddScoped<AuthenticationService>();
+
+builder.Services.AddDbContext<UserDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString(
+        builder.Configuration["ConnectionString"] 
+        ?? throw new InvalidOperationException("ConnectionString is missing from appsettings.json"))
+    );
+});
 
 var app = builder.Build();
 app.UseAuthentication();
