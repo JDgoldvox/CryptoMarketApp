@@ -1,6 +1,6 @@
 ﻿### 
 GET  http://localhost:5277/6/balance
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwibmJmIjoxNzgzMzUwOTkyLCJleHAiOjE3ODMzNTQ1OTIsImlhdCI6MTc4MzM1MDk5Mn0.jU0s3uk0eFwgaNEbyF9Ac90SfmaaMjl8NdwQfVnfp_U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwibmJmIjoxNzgzMzUzMzMxLCJleHAiOjE3ODMzNTY5MzEsImlhdCI6MTc4MzM1MzMzMX0.l91ufxLCqfiMwPFeS4A0WbFyEpo-jpklh_EN8yYlzrQ
 
 ###
 POST http://localhost:5277/login
