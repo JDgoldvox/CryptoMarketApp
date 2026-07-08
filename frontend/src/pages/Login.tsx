@@ -34,7 +34,7 @@ export default function Login() {
       );
 }
 
-function SubmitLogin(username: string, password:string, navigate: NavigateFunction)
+async function SubmitLogin(username: string, password:string, navigate: NavigateFunction)
 {
     if(AuthService.isAuthenticated())
     {
@@ -51,8 +51,51 @@ function SubmitLogin(username: string, password:string, navigate: NavigateFuncti
     alert(`${username} ${password}`);
     
     //todo: send authentication request to server
+    const loginData: boolean = await GetLoginInfo(username, password);
+    
+    if(!loginData)
+    {
+        return;
+    }
     
     //grab authentication tokens
     AuthService.login(username, password);
     navigate("/");
+}
+
+async function GetLoginInfo(username: string, password:string)
+{
+    const url = "http://localhost:5277/login";
+
+    //refreshToken: "",
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+                {
+                    username: username,
+                    password: password,
+                    refreshToken: ""
+                }
+            ),
+        });
+        
+        if(!response.ok)
+        {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        
+        //test response
+        const result = await response.json();
+        console.log(result);
+    }
+    catch (error)
+    {
+        console.log(error);
+    }
+    
+    return true;
 }
