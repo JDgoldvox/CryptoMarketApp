@@ -10,3 +10,11 @@ Content-Type: application/json
     "username": "admin",
     "password": "password"
 }
+
+###
+POST http://localhost:5277/test
+Content-Type: application/json
+
+{
+  
+}

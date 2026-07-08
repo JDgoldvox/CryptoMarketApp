@@ -1,5 +1,5 @@
 ﻿
-public class User
+public class UserResponse
 {
     public string Username { get; set; } = String.Empty;
     public string PasswordHash { get; set; } = String.Empty;

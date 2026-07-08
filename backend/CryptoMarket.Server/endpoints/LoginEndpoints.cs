@@ -1,8 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using CryptoMarket.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
+﻿using CryptoMarket.Data;
+using Microsoft.EntityFrameworkCore;
 using LoginRequest = CryptoMarket.Login.LoginRequest;
 using RegisterRequest = CryptoMarket.Login.RegisterRequest;
 
@@ -36,6 +33,19 @@ public static class LoginEndpoints
         app.MapPost("/register", (RegisterRequest request, AuthenticationService authService) =>
         {
             authService.RegisterUser(request);
+            return Results.Ok();
+        });
+        
+        app.MapPost("/test", async (AppDbContext db) =>
+        {
+            db.Add(new User()
+            {
+                PasswordHash = "password",
+                Username = "admin",
+                RefreshToken = "refrehs token lol",
+                RefreshTokenExpiration = DateTime.UtcNow.AddDays(31)
+            });
+            await db.SaveChangesAsync();
             return Results.Ok();
         });
     }

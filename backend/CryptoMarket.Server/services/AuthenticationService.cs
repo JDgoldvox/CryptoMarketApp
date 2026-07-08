@@ -28,13 +28,13 @@ public class AuthenticationService
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task<User?> RegisterUser(RegisterRequest request)
+    public async Task<UserResponse?> RegisterUser(RegisterRequest request)
     {
-        User user = new();
-        user.Username = request.Username;
-        var passwordHasher = new PasswordHasher<User>();
-        user.PasswordHash = passwordHasher.HashPassword(user, request.Password);
-        return user;
+        UserResponse userResponse = new();
+        userResponse.Username = request.Username;
+        var passwordHasher = new PasswordHasher<UserResponse>();
+        userResponse.PasswordHash = passwordHasher.HashPassword(userResponse, request.Password);
+        return userResponse;
     }
     
     public async Task<String> GenerateAndSaveRefreshTokenAsync(LoginRequest request)
@@ -60,10 +60,10 @@ public class AuthenticationService
         return Convert.ToBase64String(randomNumber);
     }
     
-    private static bool IsPasswordCorrect(User userFromDb, LoginRequest request) //need to get user from DB
+    private static bool IsPasswordCorrect(UserResponse userResponseFromDb, LoginRequest request) //need to get userResponse from DB
     {
-        var passwordHasher = new PasswordHasher<User>();
-        var result = passwordHasher.VerifyHashedPassword(userFromDb, userFromDb.PasswordHash, request.Password);
+        var passwordHasher = new PasswordHasher<UserResponse>();
+        var result = passwordHasher.VerifyHashedPassword(userResponseFromDb, userResponseFromDb.PasswordHash, request.Password);
         return result == PasswordVerificationResult.Success;
     }
 }
