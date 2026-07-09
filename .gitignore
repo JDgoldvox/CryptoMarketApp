@@ -1,4 +1,5 @@
 ### custom ###
+.aiignore
 appsettings.Development.json
 .env
 
