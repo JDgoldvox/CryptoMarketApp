@@ -10,7 +10,7 @@ public static class LoginEndpoints
 {
     public static void MapLoginEndpoints(this WebApplication app)
     {
-        app.MapPost("/login", async (LoginRequest request, AuthenticationService authService) =>
+        app.MapPost("/login", async (LoginRequest request, AuthenticationService authService, HttpContext context) =>
         {
             // Hardcoded dummy check (Replace with database check later)
             if (request.Username != "admin")
@@ -23,10 +23,32 @@ public static class LoginEndpoints
                 return Results.Unauthorized();
             }
             
+            var accessToken = await authService.GenerateNewJwt(request);
+            if (accessToken == null) return Results.InternalServerError("access token not generated");
+
+            var RefreshToken = await authService.GenerateAndSaveRefreshTokenAsync(request);
+            if (RefreshToken == null) return Results.InternalServerError("refresh token not generated");
+            
+            context.Response.Cookies.Append("CryptoMarketAccessToken", accessToken, new CookieOptions
+            {
+                HttpOnly = true,                  
+                Secure = true,                    
+                SameSite = SameSiteMode.Strict,   
+                Expires = DateTimeOffset.UtcNow.AddHours(1) 
+            });
+            
+            context.Response.Cookies.Append("CryptoMarketRefreshToken", RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,                  
+                Secure = true,                    
+                SameSite = SameSiteMode.Strict,   
+                Expires = DateTimeOffset.UtcNow.AddDays(7) 
+            });
+            
             return Results.Ok(new
             {
-                Token = await authService.GenerateNewJwt(request),
-                RefreshToken = await authService.GenerateAndSaveRefreshTokenAsync(request)
+                accessToken = accessToken,
+                refreshToken = RefreshToken
             });
         });
 
@@ -35,7 +57,41 @@ public static class LoginEndpoints
             authService.RegisterUser(request);
             return Results.Ok();
         });
-        
+
+        app.MapPost("/refresh", async (HttpContext context, AppDbContext db, AuthenticationService authService) =>
+        {
+            if (!context.Request.Cookies.TryGetValue("CryptoMarketRefreshToken", out var refreshTokenStr))
+            {
+                return Results.Unauthorized();
+            }
+            
+            var user = await db.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshTokenStr);
+            if(user == null) return Results.Unauthorized();
+
+            if (user.RefreshToken != refreshTokenStr || user.RefreshTokenExpiration < DateTime.UtcNow)
+            {
+                return Results.Unauthorized();
+            }
+            
+            var dummyLoginRequest = new LoginRequest(user.Username, "", refreshTokenStr);
+            var newAccessToken = await authService.GenerateNewJwt(dummyLoginRequest);
+            
+            context.Response.Cookies.Append("CryptoMarketAccessToken", newAccessToken, new CookieOptions
+            {
+                HttpOnly = true,                  
+                Secure = true,                    
+                SameSite = SameSiteMode.Strict,   
+                Expires = DateTimeOffset.UtcNow.AddHours(1) 
+            });
+            
+            return Results.Ok();
+        });
+
+        app.MapGet("/me", (HttpContext context) =>
+        {
+            return Results.Ok();
+        }).RequireAuthorization();
+
         app.MapPost("/test", async (AppDbContext db) =>
         {
             db.Add(new User()

@@ -1,6 +1,7 @@
 ﻿
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Builder;
@@ -19,17 +20,29 @@ public static class CryptoMarketAuthorization
         
         keyBytes = Encoding.UTF8.GetBytes(secretKey);
 
-        // CONFIGURE JWT AUTHENTICATION
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = false, 
-                    ValidateAudience = false, 
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+                };
+                
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.TryGetValue("CryptoMarketAccessToken", out var token))
+                        {
+                            // Hand the token over to the JWT validator
+                            context.Token = token;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
         
@@ -39,5 +52,4 @@ public static class CryptoMarketAuthorization
                 policy.RequireClaim(ClaimTypes.Role, "admin")
             ));
     }
-
 }

@@ -37,12 +37,9 @@ public class AuthenticationService
         return userResponse;
     }
     
-    public async Task<String> GenerateAndSaveRefreshTokenAsync(LoginRequest request)
+    public async Task<String?> GenerateAndSaveRefreshTokenAsync(LoginRequest request)
     {
         var refreshToken = GenerateRefreshToken();
-        
-        
-        
         
         //todo: save to database
         //FIND the user.

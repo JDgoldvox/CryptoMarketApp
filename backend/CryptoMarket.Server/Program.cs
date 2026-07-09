@@ -1,11 +1,9 @@
-using System.Security.Claims;
 using CryptoMarket.Authorization;
 using CryptoMarket.Data;
 using CryptoMarket.Endpoints;
 using CryptoMarket.LoginEndpoints;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using EFCore.NamingConventions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi(options => options.AddScalarTransformers());
@@ -18,7 +16,19 @@ builder.Services.AddDbContext<AppDbContext>(options => {
     ).UseSnakeCaseNamingConvention();
 });
 
+string corsPolicy = "developmentCorsPolicy";
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(name: corsPolicy, policy =>
+    {
+        policy.WithOrigins(builder.Configuration["FrontendUrl"])
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    }));
+
 var app = builder.Build();
+app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapAccountEndpoints();
@@ -29,12 +39,5 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference("/docs");
 }
-
-// // PROTECTED ENDPOINT
-// app.MapGet("/secret", (ClaimsPrincipal user) => 
-//     {
-//         return Results.Ok($"Hello {user.Identity?.Name}, you successfully accessed the secure API!");
-//     })
-//     .RequireAuthorization();    
 
 app.Run();
