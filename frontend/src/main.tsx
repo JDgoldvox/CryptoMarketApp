@@ -11,7 +11,7 @@ import Landing from './pages/Landing.tsx'
 import {AuthService} from './services/AuthService.ts'
 
 const protectedLoader = async () => {
-    if (!AuthService.isAuthenticated()) {
+    if (!await AuthService.IsAuthenticated()) {
         throw redirect("/login");
     }
     return null;

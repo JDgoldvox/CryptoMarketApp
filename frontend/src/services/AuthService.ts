@@ -1,18 +1,30 @@
 ﻿export const AuthService = {
 
-    login: (accessToken: string, refreshToken: string) => {
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("refreshToken", refreshToken);
-    },
+    // login: (accessToken: string, refreshToken: string) => {
+    //     sessionStorage.setItem("accessToken", accessToken);
+    //     sessionStorage.setItem("refreshToken", refreshToken);
+    // },
 
-    // Check if we have a refresh token (our "logged in" flag)
-    isAuthenticated: () => {
-        return !!sessionStorage.getItem("refreshToken");
-    },
+    IsAuthenticated: async () => {
+        try {
+            const response = await fetch("http://localhost:5277/me", {
+                method: "GET",
+                credentials: "include", 
+            });
+            
+            if(response.ok)
+            {
+                console.log("u have valid cookies");
+            }
+            else
+            {
+                console.log("invalid cookies, need to get");
+            }
 
-    // Get the Access Token for your API calls
-    getAccessToken: () => {
-        return sessionStorage.getItem("accessToken");
+            return response.ok;
+        } catch (error) {
+            console.error("Auth check failed:", error);
+            return false;
+        }
     },
-   
 };
