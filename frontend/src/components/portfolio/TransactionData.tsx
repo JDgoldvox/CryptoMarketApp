@@ -24,22 +24,24 @@ export default function TransactionData() {
         <table className={style.table}>
             <caption> Transaction Data </caption>
             <thead>
-            {
-                headers.map((header, index) => {
-                    return <th key={index}>{header}</th>
-                })
-            }
+                <tr>
+                {
+                    headers.map((header: string, index: number) => {
+                        return <th key={index}>{header}</th>
+                    })
+                }
+                </tr>
             </thead>
             <tbody>
             {
-                transactions.map((transaction, index) => {
+                transactions.map((transaction: TransactionData, index: number) => {
                     return ( 
-                        <tr>
-                            <td key={index}>{transaction.Id}</td>
-                            <td key={index}>{transaction.Date}</td>
-                            <td key={index}>{transaction.Time}</td>
-                            <td key={index}>{transaction.Type}</td>
-                            <td key={index}>{transaction.Amount}</td>
+                        <tr key={index}>
+                            <td>{transaction.Id}</td>
+                            <td>{transaction.Date}</td>
+                            <td>{transaction.Time}</td>
+                            <td>{transaction.Type}</td>
+                            <td>{transaction.Amount}</td>
                         </tr>
                     );
                 })

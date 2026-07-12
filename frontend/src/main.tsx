@@ -17,10 +17,13 @@ const protectedLoader = async () => {
     return null;
 }
 
+const GlobalFallback = () => <div>Loading app infrastructure...</div>;
+    
 const router : any = createBrowserRouter([
     {
         path: "/",
         Component: App,
+        HydrateFallback: GlobalFallback,
         children: [
             {
                 index: true,
@@ -48,6 +51,8 @@ const router : any = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <RouterProvider router={router} />
+      <RouterProvider 
+          router={router} 
+      />
   </StrictMode>,
 )
