@@ -1,15 +1,16 @@
 ﻿import style from "./TransactionData.module.css"
+import {useState} from "react";
 
 export default function TransactionData() {
 
     const headers: string[] = ["Id", "Date", "Time", "Type", "Amount"];
     
-    const transactions: TransactionData[] = [
-        {Id: 145, Date:"2024-3-10", Time:"10:45", Type:"Buy", Amount:"$1000"},
-        {Id: 148, Date:"2024-3-10", Time:"10:45", Type:"Buy", Amount:"$1000"},
-        {Id: 142, Date:"2024-3-10", Time:"10:45", Type:"Buy", Amount:"$1000"},
-        {Id: 143, Date:"2024-3-10", Time:"10:45", Type:"Buy", Amount:"$1000"},
-    ];
+    let [transactions, setTransactions] = useState<TransactionData[]>([
+        {Id: 145, Date:"loading...", Time:"loading...", Type:"loading...", Amount:"loading..."},
+        {Id: 146, Date:"loading...", Time:"loading...", Type:"loading...", Amount:"loading..."},
+        {Id: 147, Date:"loading...", Time:"loading...", Type:"loading...", Amount:"loading..."},
+        {Id: 148, Date:"loading...", Time:"loading...", Type:"loading...", Amount:"loading..."}
+    ]);
     
     interface TransactionData
     {

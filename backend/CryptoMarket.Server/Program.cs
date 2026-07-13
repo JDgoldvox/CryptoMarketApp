@@ -33,6 +33,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapAccountEndpoints();
 app.MapLoginEndpoints();
+app.MapTransactionEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

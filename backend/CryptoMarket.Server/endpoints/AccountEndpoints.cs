@@ -7,7 +7,10 @@ public static class AccountEndpoints
 {
     //private const string groupName = "/";
 
-    private static int tempBalance = 1000;
+    private static decimal tempBalance = 1000;
+    private static string tempUsername = "temp username";
+    private static decimal tempFiat = 563;
+    private static float tempPnl= 1000;
     
     public static void MapAccountEndpoints(this WebApplication app)
     {
@@ -20,6 +23,13 @@ public static class AccountEndpoints
             .Produces<AccountBalanceResponse>()
             .RequireAuthorization("Admins Only");
         ;
+
+        app.MapGet("/{userId}/accountdetails", GetUserAccountDetails)
+            .WithTags("Account")
+            .WithName("Get user account details")
+            .WithSummary("Get the current details of a user")
+            .Produces<AccountDetailsResponse>();
+
     }
     
     /// <summary> Get a user account balance from an id </summary>
@@ -31,6 +41,23 @@ public static class AccountEndpoints
         var response = new AccountBalanceResponse(
             Balance: tempBalance
             );
+        
+        return Results.Ok(response);
+    }
+
+    /// <summary> Get a user account details from an id </summary>
+    /// <param name="userId"> The unique identifier of a user </param>
+    /// <returns> The current user details </returns>
+    /// <returns> <see cref="AccountDetailsResponse"/> </returns>
+    private static IResult GetUserAccountDetails(int userId)
+    {
+        var response = new AccountDetailsResponse(
+            Username: tempUsername,
+            Fiat: tempFiat,
+            lastSignedIn: DateTime.UtcNow,
+            Balance: tempBalance,
+            Pnl: tempPnl
+        );
         
         return Results.Ok(response);
     }

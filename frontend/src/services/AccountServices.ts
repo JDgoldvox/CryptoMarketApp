@@ -24,18 +24,16 @@ export async function GetUserBalance(userId: number) : Promise<string>
     }
 }
 
-class AccountDetails {
-    public username: string = "";
-    public fiat: string = "";
-    public lastSignedIn: string = "";
-    public balance: string = "";
-    public pnl: string = "";
+export interface IAccountDetails {
+    username: string;
+    fiat: number;
+    lastSignedIn: Date;
+    balance: number;
+    pnl: number;
 }
 
-export async function GetAccountDetails(userId: number) : Promise <AccountDetails>
+export async function GetAccountDetails(userId: number) : Promise <IAccountDetails>
 {
-    let accountDetails: AccountDetails = new AccountDetails();
-    
     const url: string = `http://localhost:5277/${userId}/AccountDetails`;
     const response = await fetch(url, {
         method: "GET",
@@ -45,14 +43,14 @@ export async function GetAccountDetails(userId: number) : Promise <AccountDetail
     if (response.ok)
     {
         const result = await response.json();
-
-        accountDetails.username = result.username;
-        accountDetails.fiat = result.fiat;
-        accountDetails.lastSignedIn = result.lastSignedIn;
-        accountDetails.balance = result.balance; 
-        accountDetails.pnl = result.pnl;
         
-        return accountDetails;
+        return {
+            username: result.username,
+            fiat: result.fiat,
+            lastSignedIn: new Date(result.lastSignedIn),
+            balance: result.balance,
+            pnl: result.pnl
+        };
     }
     else
     {

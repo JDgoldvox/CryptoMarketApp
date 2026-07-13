@@ -17,3 +17,7 @@ Content-Type: application/json
 {
   
 }
+
+###
+GET http://localhost:5277/1/accountdetails
+Content-Type: application/json
