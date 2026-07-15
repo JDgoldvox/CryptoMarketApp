@@ -21,3 +21,12 @@ Content-Type: application/json
 ###
 GET http://localhost:5277/1/accountdetails
 Content-Type: application/json
+
+###
+POST http://localhost:5277/register
+Content-Type: application/json
+
+{
+  "Username": "cool user name",
+  "Password": "cool password"
+}

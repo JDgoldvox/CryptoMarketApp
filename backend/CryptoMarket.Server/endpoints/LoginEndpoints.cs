@@ -10,18 +10,18 @@ public static class LoginEndpoints
 {
     public static void MapLoginEndpoints(this WebApplication app)
     {
-        app.MapPost("/login", async (LoginRequest request, AuthenticationService authService, HttpContext context) =>
+        app.MapPost("/login", async (LoginRequest request, AuthenticationService authService, AppDbContext db, HttpContext context) =>
         {
-            // Hardcoded dummy check (Replace with database check later)
-            if (request.Username != "admin")
-            {
-                return Results.Unauthorized();
-            }
-
-            if (request.Password != "password")
-            {
-                return Results.Unauthorized();
-            }
+            // // Hardcoded dummy check (Replace with database check later)
+            // if (request.Username != "admin")
+            // {
+            //     return Results.Unauthorized();
+            // }
+            //
+            // if (request.Password != "password")
+            // {
+            //     return Results.Unauthorized();
+            // }
             
             var accessToken = await authService.GenerateNewJwt(request);
             if (accessToken == null) return Results.InternalServerError("access token not generated");
@@ -44,18 +44,37 @@ public static class LoginEndpoints
                 SameSite = SameSiteMode.Strict,   
                 Expires = DateTimeOffset.UtcNow.AddDays(7) 
             });
+
+            try
+            {
+                User? user = await db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+
+                if (user == null) return Results.InternalServerError("user not found");
+                
+                user.RefreshToken = RefreshToken;
+                user.RefreshTokenExpiration = DateTimeOffset.UtcNow.AddDays(7);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Results.InternalServerError("refresh token not saved");
+            }
             
             return Results.Ok(new
             {
                 accessToken = accessToken,
-                refreshToken = RefreshToken
+                refreshToken = RefreshToken,
             });
         });
 
-        app.MapPost("/register", (RegisterRequest request, AuthenticationService authService) =>
+        app.MapPost("/register", async (RegisterRequest request, AppDbContext db, AuthenticationService authService) =>
         {
-            authService.RegisterUser(request);
-            return Results.Ok();
+            if (await authService.RegisterUser(request, db))
+            {
+                return Results.Ok();
+            }
+            return Results.InternalServerError("User not able to be registered");
         });
 
         app.MapPost("/refresh", async (HttpContext context, AppDbContext db, AuthenticationService authService) =>

@@ -3,6 +3,7 @@ using System;
 using CryptoMarket.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CryptoMarket.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260715115312_u")]
+    partial class u
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,7 @@ namespace CryptoMarket.Server.Migrations
                         .HasColumnType("text")
                         .HasColumnName("refresh_token");
 
-                    b.Property<DateTimeOffset?>("RefreshTokenExpiration")
+                    b.Property<DateTime?>("RefreshTokenExpiration")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("refresh_token_expiration");
 

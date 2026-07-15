@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using CryptoMarket.Authorization;
+using CryptoMarket.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using LoginRequest = CryptoMarket.Login.LoginRequest;
@@ -28,13 +29,34 @@ public class AuthenticationService
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task<UserResponse?> RegisterUser(RegisterRequest request)
+    public async Task<bool> RegisterUser(RegisterRequest request, AppDbContext db)
     {
-        UserResponse userResponse = new();
-        userResponse.Username = request.Username;
-        var passwordHasher = new PasswordHasher<UserResponse>();
-        userResponse.PasswordHash = passwordHasher.HashPassword(userResponse, request.Password);
-        return userResponse;
+        //check for duplicate usernames
+        if (db.Users.Any((u => u.Username == request.Username)))
+        {
+            Console.WriteLine("Username already exists");
+            return false;
+        }
+        
+        var passwordHasher = new PasswordHasher<string>();
+
+        User user = new User()
+        {
+            Username = request.Username,
+            PasswordHash = passwordHasher.HashPassword(request.Username, request.Password),
+        };
+        
+        try
+        {
+            db.Add(user);
+            await db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
     
     public async Task<String?> GenerateAndSaveRefreshTokenAsync(LoginRequest request)
@@ -57,10 +79,12 @@ public class AuthenticationService
         return Convert.ToBase64String(randomNumber);
     }
     
-    private static bool IsPasswordCorrect(UserResponse userResponseFromDb, LoginRequest request) //need to get userResponse from DB
+    private static bool IsPasswordCorrect(LoginRequest request) //need to get userResponse from DB
     {
-        var passwordHasher = new PasswordHasher<UserResponse>();
-        var result = passwordHasher.VerifyHashedPassword(userResponseFromDb, userResponseFromDb.PasswordHash, request.Password);
-        return result == PasswordVerificationResult.Success;
+        // var passwordHasher = new PasswordHasher<UserResponse>();
+        // var result = passwordHasher.VerifyHashedPassword(userResponseFromDb, userResponseFromDb.PasswordHash, request.Password);
+        // return result == PasswordVerificationResult.Success;
+        
+        return true;
     }
 }
