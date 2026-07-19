@@ -1,1 +1,3 @@
 # CryptoMarketApp
+
+**CryptoMarketApp** is a full-stack web application designed to track and monitor cryptocurrency markets, built using an advanced decoupled architecture. The backend leverages a lightweight, high-performance .NET Minimal API integrated with an Entity Framework Core and PostgreSQL data layer to manage relational users and market data. On the frontend, a responsive React single-page application orchestrates user states and secure authentication flows utilizing state-of-the-art cryptographic practices, including custom HTTP-Only cookie storage for JSON Web Tokens (JWT) and secure server-side password hashing.
