@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using CryptoMarket.Authorization;
 using CryptoMarket.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using LoginRequest = CryptoMarket.Login.LoginRequest;
@@ -58,20 +59,8 @@ public class AuthenticationService
             return false;
         }
     }
-    
-    public async Task<String?> GenerateAndSaveRefreshTokenAsync(LoginRequest request)
-    {
-        var refreshToken = GenerateRefreshToken();
-        
-        //todo: save to database
-        //FIND the user.
-        // user.RefreshToken = refreshToken;
-        // user.RefreshTokenExpiration = DateTime.UtcNow.AddDays(31);
-        
-        return refreshToken;
-    }
 
-    private string GenerateRefreshToken()
+    public async Task<String?> GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
         using var rng = RandomNumberGenerator.Create();
@@ -79,12 +68,12 @@ public class AuthenticationService
         return Convert.ToBase64String(randomNumber);
     }
     
-    private static bool IsPasswordCorrect(LoginRequest request) //need to get userResponse from DB
+    public async Task<bool> IsPasswordCorrect(LoginRequest request, AppDbContext db) //need to get userResponse from DB
     {
-        // var passwordHasher = new PasswordHasher<UserResponse>();
-        // var result = passwordHasher.VerifyHashedPassword(userResponseFromDb, userResponseFromDb.PasswordHash, request.Password);
-        // return result == PasswordVerificationResult.Success;
-        
-        return true;
+        User? user = db.Users.FirstOrDefault(u => u.Username == request.Username);
+        if (user == null)  return false;
+        var passwordHasher = new PasswordHasher<string>();
+        var result = passwordHasher.VerifyHashedPassword(request.Username, user.PasswordHash, request.Password);
+        return result == PasswordVerificationResult.Success;
     }
 }

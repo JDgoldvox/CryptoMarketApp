@@ -12,21 +12,19 @@ public static class LoginEndpoints
     {
         app.MapPost("/login", async (LoginRequest request, AuthenticationService authService, AppDbContext db, HttpContext context) =>
         {
-            // // Hardcoded dummy check (Replace with database check later)
-            // if (request.Username != "admin")
-            // {
-            //     return Results.Unauthorized();
-            // }
-            //
-            // if (request.Password != "password")
-            // {
-            //     return Results.Unauthorized();
-            // }
+            //check if username and password is correct
+            if (!await authService.IsPasswordCorrect(request, db))
+            {
+                return Results.Problem(
+                    statusCode: StatusCodes.Status401Unauthorized,
+                    detail: "Invalid username or password"
+                    );
+            }
             
             var accessToken = await authService.GenerateNewJwt(request);
             if (accessToken == null) return Results.InternalServerError("access token not generated");
 
-            var RefreshToken = await authService.GenerateAndSaveRefreshTokenAsync(request);
+            var RefreshToken = await authService.GenerateRefreshToken();
             if (RefreshToken == null) return Results.InternalServerError("refresh token not generated");
             
             context.Response.Cookies.Append("CryptoMarketAccessToken", accessToken, new CookieOptions
@@ -63,8 +61,8 @@ public static class LoginEndpoints
             
             return Results.Ok(new
             {
-                accessToken = accessToken,
-                refreshToken = RefreshToken,
+                // accessToken = accessToken,
+                // refreshToken = RefreshToken,
             });
         });
 
@@ -78,33 +76,39 @@ public static class LoginEndpoints
         });
 
         app.MapPost("/refresh", async (HttpContext context, AppDbContext db, AuthenticationService authService) =>
-        {
-            if (!context.Request.Cookies.TryGetValue("CryptoMarketRefreshToken", out var refreshTokenStr))
             {
-                return Results.Unauthorized();
-            }
-            
-            var user = await db.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshTokenStr);
-            if(user == null) return Results.Unauthorized();
+                if (!context.Request.Cookies.TryGetValue("CryptoMarketRefreshToken", out var refreshTokenStr))
+                {
+                    return Results.Unauthorized();
+                }
+                
+                //confirm refresh token is valid
+                User? user = await db.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshTokenStr);
+                if (user == null) return Results.Unauthorized();
 
-            if (user.RefreshToken != refreshTokenStr || user.RefreshTokenExpiration < DateTime.UtcNow)
-            {
-                return Results.Unauthorized();
-            }
-            
-            var dummyLoginRequest = new LoginRequest(user.Username, "", refreshTokenStr);
-            var newAccessToken = await authService.GenerateNewJwt(dummyLoginRequest);
-            
-            context.Response.Cookies.Append("CryptoMarketAccessToken", newAccessToken, new CookieOptions
-            {
-                HttpOnly = true,                  
-                Secure = true,                    
-                SameSite = SameSiteMode.Strict,   
-                Expires = DateTimeOffset.UtcNow.AddHours(1) 
-            });
-            
-            return Results.Ok();
-        });
+                //check if refresh token is expired
+                if (user.RefreshToken != refreshTokenStr || user.RefreshTokenExpiration < DateTime.UtcNow)
+                    return Results.Unauthorized();
+
+                //refresh token is valid, generate new access token
+                var dummyLoginRequest = new LoginRequest(user.Username, "", refreshTokenStr);
+                var newAccessToken = await authService.GenerateNewJwt(dummyLoginRequest);
+                
+                if(newAccessToken == null)
+                    return Results.InternalServerError("access token not generated - something went wrong on server");
+
+                context.Response.Cookies.Append("CryptoMarketAccessToken", newAccessToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddHours(1)
+                });
+
+                return Results.Ok("Found user, and refreshed token");
+            })
+            .RequireAuthorization()
+            .WithSummary("Refresh the access token");
 
         app.MapGet("/me", (HttpContext context) =>
         {

@@ -22,11 +22,25 @@ Content-Type: application/json
 GET http://localhost:5277/1/accountdetails
 Content-Type: application/json
 
-###
+### REGISTER ACCOUNT
 POST http://localhost:5277/register
 Content-Type: application/json
 
 {
-  "Username": "cool user name",
-  "Password": "cool password"
+  "Username": "admin",
+  "Password": "password"
 }
+
+### 
+
+POST http://localhost:5277/login
+Content-Type: application/json
+
+{
+  "Username": "admin",
+  "Password": "password"
+}
+
+### 
+POST http://localhost:5277/refresh
+
